@@ -1,8 +1,13 @@
 {
   "name": "filesgen",
-  "displayName": "FilesGen",
-  "description": "",
+  "displayName": "FilesGen - Files Generator",
+  "description": "VSCode extension to generate files from config file",
   "version": "0.0.1",
+  "license": "MIT",
+  "repository": {
+    "url": "https://github.com/Infected-by-js/filesgen-vscode",
+    "type": "git"
+  },
   "engines": {
     "vscode": "^1.84.0"
   },
@@ -10,7 +15,7 @@
     "Other"
   ],
   "activationEvents": [],
-  "main": "./out/extension.js",
+  "main": "./out/extension",
   "contributes": {
     "commands": [
       {
