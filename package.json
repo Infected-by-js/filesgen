@@ -4,6 +4,7 @@
   "description": "VSCode extension to generate files from config file",
   "version": "0.0.1",
   "license": "MIT",
+  "icon": "./icon.png",
   "repository": {
     "url": "https://github.com/Infected-by-js/filesgen-vscode",
     "type": "git"
@@ -15,6 +16,7 @@
     "Other"
   ],
   "activationEvents": [],
+  "publisher": "InfectedByJs",
   "main": "./out/extension",
   "contributes": {
     "commands": [
@@ -41,7 +43,22 @@
           }
         }
       ]
-    }
+    },
+    "configuration": [
+      {
+        "title": "File Generator Configuration",
+        "properties": {
+          "filesgen.config": {
+            "type": [
+              "object",
+              "array"
+            ],
+            "default": {},
+            "description": "File Generator Configuration"
+          }
+        }
+      }
+    ]
   },
   "scripts": {
     "vscode:prepublish": "yarn run compile",

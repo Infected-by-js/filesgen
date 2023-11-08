@@ -1,27 +1,24 @@
 import * as vscode from 'vscode'
 import {FilesGenerator} from './FileGenerator'
-import {getDestination, selectConfigKey, showError, showSuccessMessage} from './helpers'
-import {isNull} from './types'
+import {getDestination, selectConfigKey, showEmptyConfigMessage, showError, showSuccessMessage} from './helpers'
+import {isNull, isObject, isUndefined} from './types'
 
 export function activate(context: vscode.ExtensionContext) {
   let disposable = vscode.commands.registerCommand('filesgen.generateFiles', async (resource: vscode.Uri) => {
     const generator = new FilesGenerator()
 
-    await generator.loadConfig()
-
-    if (!generator.config) {
-      showError(`The config file "${generator.configName}" does not exist`)
+    if (generator.isConfigEmpty()) {
+      showEmptyConfigMessage()
       return
     }
-
     const destination = resource && resource.fsPath ? resource : await getDestination()
 
     if (isNull(destination)) return
 
-    const selectedConfigKey = await selectConfigKey(generator.config)
+    const selectedConfigKey = await selectConfigKey(generator.getConfigKeys())
 
     generator.generate(destination, selectedConfigKey)
-    showSuccessMessage(generator.configName)
+    showSuccessMessage(selectedConfigKey)
   })
 
   context.subscriptions.push(disposable)

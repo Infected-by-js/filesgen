@@ -1,30 +1,34 @@
-import {workspace, Uri} from 'vscode'
+import {workspace, Uri, ConfigurationTarget} from 'vscode'
 import {TConfig, TFile, TFolder, isArray, isObject, isString} from './types'
-import {showError} from './helpers'
+import {isEmpty, showError} from './helpers'
+import {CONFIG_KEY, EXTENSTION_NAME} from './constants'
 
 export class FilesGenerator {
-  config: TConfig | undefined
-  configName = 'filesgen.json'
+  private extName = EXTENSTION_NAME
+  private configKey = CONFIG_KEY
 
-  async loadConfig(configFileName?: string): Promise<void> {
-    const rootPath = workspace.workspaceFolders?.[0]?.uri
+  getConfig(): TConfig | undefined {
+    const configuration = workspace.getConfiguration(this.extName)
+    return configuration.get(this.configKey)
+  }
 
-    if (!rootPath) {
-      showError('No workspace folder found.')
-      return
-    }
+  isConfigEmpty(): boolean {
+    return isEmpty(this.getConfig())
+  }
+  getConfigKeys(): string[] {
+    const config = this.getConfig()
 
-    if (configFileName) this.configName = configFileName
+    return config && isObject(config) ? Object.keys(config) : []
+  }
 
-    const configUri = Uri.joinPath(rootPath, this.configName)
+  async createDefaultConfig(): Promise<void> {
+    const defaultConfig = {}
+    const configPath = `${this.extName}.${this.configKey}`
 
     try {
-      const data = await workspace.fs.readFile(configUri)
-      const configString = Buffer.from(data).toString('utf-8')
-
-      this.config = JSON.parse(configString) as TConfig
+      await workspace.getConfiguration().update(configPath, defaultConfig, ConfigurationTarget.Global)
     } catch (error) {
-      showError(`Failed to load the configuration file: ${error}`)
+      showError(`Failed to create the configuration file: ${error}`)
     }
   }
 
@@ -34,12 +38,13 @@ export class FilesGenerator {
       return
     }
 
-    if (!this.config) {
-      showError(`The config file "${this.configName}" does not exist`)
-      return
+    if (this.isConfigEmpty()) {
+      await this.createDefaultConfig()
     }
 
-    const config = isString(configKey) && isObject(this.config) ? this.config[configKey] : this.config
+    const userConfig = this.getConfig() as TConfig
+    const config = isString(configKey) && isObject(userConfig) ? userConfig[configKey] : userConfig
+
     await this.generateFiles(config, rootPath)
   }
 
