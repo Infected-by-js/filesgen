@@ -15,9 +15,28 @@
     "commands": [
       {
         "command": "filesgen.generateFiles",
-        "title": "FilesGen: Generate Files from JSON"
+        "title": "Generate files from JSON",
+        "category": "FilesGen",
+        "group": "FilesGen",
+        "icon": {
+          "light": "./src/icon.svg",
+          "dark": "./src/icon.svg"
+        }
       }
-    ]
+    ],
+    "menus": {
+      "explorer/context": [
+        {
+          "when": "explorerResourceIsFolder",
+          "command": "filesgen.generateFiles",
+          "group": "FilesGen",
+          "icon": {
+            "light": "./src/icon.svg",
+            "dark": "./src/icon.svg"
+          }
+        }
+      ]
+    }
   },
   "scripts": {
     "vscode:prepublish": "yarn run compile",

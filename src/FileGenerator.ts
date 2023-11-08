@@ -1,13 +1,13 @@
-import * as vscode from 'vscode'
-import {Config, TFile, TFolder} from './types'
+import {workspace, Uri} from 'vscode'
+import {TConfig, TFile, TFolder, isArray, isObject, isString} from './types'
 import {showError} from './helpers'
 
 export class FilesGenerator {
-  config: Config | undefined
+  config: TConfig | undefined
   configName = 'filesgen.json'
 
   async loadConfig(configFileName?: string): Promise<void> {
-    const rootPath = vscode.workspace.workspaceFolders?.[0]?.uri
+    const rootPath = workspace.workspaceFolders?.[0]?.uri
 
     if (!rootPath) {
       showError('No workspace folder found.')
@@ -16,22 +16,19 @@ export class FilesGenerator {
 
     if (configFileName) this.configName = configFileName
 
-    const configUri = vscode.Uri.joinPath(rootPath, this.configName)
+    const configUri = Uri.joinPath(rootPath, this.configName)
 
     try {
-      const data = await vscode.workspace.fs.readFile(configUri)
+      const data = await workspace.fs.readFile(configUri)
       const configString = Buffer.from(data).toString('utf-8')
 
-      this.config = JSON.parse(configString) as Config
+      this.config = JSON.parse(configString) as TConfig
     } catch (error) {
       showError(`Failed to load the configuration file: ${error}`)
     }
   }
 
-  async generate(
-    rootPath = vscode.workspace.workspaceFolders?.[0].uri,
-    configKey: string | null = null
-  ): Promise<void> {
+  async generate(rootPath = workspace.workspaceFolders?.[0].uri, configKey: string | null = null): Promise<void> {
     if (!rootPath) {
       showError(`The root path does not exist`)
       return
@@ -42,32 +39,32 @@ export class FilesGenerator {
       return
     }
 
-    const config = typeof configKey === 'string' ? this.config[configKey] : this.config
+    const config = isString(configKey) && isObject(this.config) ? this.config[configKey] : this.config
     await this.generateFiles(config, rootPath)
   }
 
-  private async createFile(fileName: string, currentDir: vscode.Uri): Promise<void> {
-    const fileUri = vscode.Uri.joinPath(currentDir, fileName)
+  private async createFile(fileName: string, currentDir: Uri): Promise<void> {
+    const fileUri = Uri.joinPath(currentDir, fileName)
     const fileContent = ''
 
-    await vscode.workspace.fs.writeFile(fileUri, Buffer.from(fileContent))
+    await workspace.fs.writeFile(fileUri, Buffer.from(fileContent))
   }
 
-  private async createFolder(folderName: string, currentDir: vscode.Uri): Promise<void> {
-    const folderUri = vscode.Uri.joinPath(currentDir, folderName)
+  private async createFolder(folderName: string, currentDir: Uri): Promise<void> {
+    const folderUri = Uri.joinPath(currentDir, folderName)
 
-    await vscode.workspace.fs.createDirectory(folderUri)
+    await workspace.fs.createDirectory(folderUri)
   }
 
-  private async generateFiles(config: TFile | TFolder, currentDir: vscode.Uri): Promise<void> {
-    if (typeof config === 'string') {
+  private async generateFiles(config: TFile | TFolder, currentDir: Uri): Promise<void> {
+    if (isString(config)) {
       await this.createFile(config, currentDir)
       return
     }
 
-    if (Array.isArray(config)) {
+    if (isArray(config)) {
       for (const item of config) {
-        if (typeof item === 'string') {
+        if (isString(item)) {
           await this.createFile(item, currentDir)
         } else {
           await this.generateFiles(item, currentDir)
@@ -77,7 +74,7 @@ export class FilesGenerator {
     }
 
     for (const key in config) {
-      const folderPath = vscode.Uri.joinPath(currentDir, key)
+      const folderPath = Uri.joinPath(currentDir, key)
       const item = config[key]
 
       await this.createFolder(key, currentDir)
