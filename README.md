@@ -27,12 +27,7 @@ You can define your project structure in one of the following ways:
 **JSON Array Format**:
 
 ```json
-[
-  "a.ts",
-  "b.ts",
-  "c.ts"
-  // ...
-]
+["a.ts", "b.ts", "c.ts"]
 ```
 
 **JSON Object Format**:
