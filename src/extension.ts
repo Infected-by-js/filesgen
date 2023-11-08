@@ -1,9 +1,10 @@
 import * as vscode from 'vscode'
 import {FilesGenerator} from './FileGenerator'
 import {getDestination, selectConfigKey, showError, showSuccessMessage} from './helpers'
+import {isNull} from './types'
 
 export function activate(context: vscode.ExtensionContext) {
-  let disposable = vscode.commands.registerCommand('filesgen.generateFiles', async () => {
+  let disposable = vscode.commands.registerCommand('filesgen.generateFiles', async (resource: vscode.Uri) => {
     const generator = new FilesGenerator()
 
     await generator.loadConfig()
@@ -13,7 +14,10 @@ export function activate(context: vscode.ExtensionContext) {
       return
     }
 
-    const destination = await getDestination()
+    const destination = resource && resource.fsPath ? resource : await getDestination()
+
+    if (isNull(destination)) return
+
     const selectedConfigKey = await selectConfigKey(generator.config)
 
     generator.generate(destination, selectedConfigKey)
@@ -21,4 +25,5 @@ export function activate(context: vscode.ExtensionContext) {
   })
 
   context.subscriptions.push(disposable)
+  vscode.commands.executeCommand('setContext', 'filesgen.contextMenuIsVisible', true)
 }
