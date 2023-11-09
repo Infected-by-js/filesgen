@@ -26,8 +26,8 @@
         "category": "FilesGen",
         "group": "FilesGen",
         "icon": {
-          "light": "./src/icon.svg",
-          "dark": "./src/icon.svg"
+          "light": "./icon.svg",
+          "dark": "./icon.svg"
         }
       }
     ],
@@ -48,13 +48,38 @@
       {
         "title": "File Generator Configuration",
         "properties": {
-          "filesgen.config": {
+          "filesgen.presets": {
             "type": [
-              "object",
-              "array"
+              "array",
+              "object"
             ],
-            "default": {},
-            "description": "File Generator Configuration"
+            "default": [],
+            "description": "Defines the structure of the generated files."
+          }
+        }
+      },
+      {
+        "title": "Overwrite strategy",
+        "properties": {
+          "filesgen.overwriteStrategy": {
+            "type": "string",
+            "enum": [
+              "force",
+              "withConfirm",
+              "none"
+            ],
+            "default": "withConfirm",
+            "enumItemLabels": [
+              "Force",
+              "With Confirmation",
+              "None"
+            ],
+            "enumDescriptions": [
+              "To automatically overwrite existing files or folders without confirmation.",
+              "To receive a confirmation dialog before overwriting existing files or folders.",
+              "To avoid overwriting any existing files or folders during generation."
+            ],
+            "description": "Defines a rewrite strategy while generating files. This determines how the extension handles existing files or folders."
           }
         }
       }
