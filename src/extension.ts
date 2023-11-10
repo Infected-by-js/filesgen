@@ -3,7 +3,7 @@ import ConfigService from './services/config'
 import OverwriteStrategyService from './services/overwrite-strategy'
 import NotifyService from './services/notify'
 import FilesGenerationService from './services/files-generation'
-import {isNull} from './type-guards'
+import {isNull, isUndefined} from './type-guards'
 
 export function activate(context: vscode.ExtensionContext) {
   let disposable = vscode.commands.registerCommand('filesgen.generateFiles', async (resource: vscode.Uri) => {
@@ -23,8 +23,9 @@ export function activate(context: vscode.ExtensionContext) {
 
     const selectedConfigKey = await notifier.selectPreset(config.getPresetsNames())
 
+    if (isUndefined(selectedConfigKey)) return
+
     generator.generate(destination, selectedConfigKey)
-    notifier.showSuccessMessage(selectedConfigKey)
   })
 
   context.subscriptions.push(disposable)

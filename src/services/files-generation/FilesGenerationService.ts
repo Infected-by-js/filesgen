@@ -19,49 +19,86 @@ export class FilesGenerationService {
 
   async generate(rootPath = workspace.workspaceFolders?.[0].uri, presetName: string | null = null): Promise<void> {
     if (!rootPath) {
-      this.notifyService.showError(`The root path does not exist`)
+      this.showError(`The root path does not exist`)
       return
     }
 
     try {
-      const config = await this.configService.getPresetConfig(presetName)
-      await this.generateFiles(config, rootPath)
+      const config = await this.getConfig(presetName)
+      const isSuccess = await this.generateFiles(config, rootPath)
+
+      isSuccess ? this.showSuccess(presetName) : this.showCancel()
     } catch (error) {
-      this.notifyService.showError(error as string)
+      this.showError(error as string)
     }
   }
 
-  private async createFile(fileName: string, currentDir: Uri): Promise<void> {
-    await this.overwriteStrategyService.createFile(fileName, currentDir, this.notifyService)
+  private getConfig(presetName: string | null) {
+    return this.configService.getPresetConfig(presetName)
   }
 
-  private async createFolder(folderName: string, currentDir: Uri): Promise<void> {
-    await this.overwriteStrategyService.createFolder(folderName, currentDir, this.notifyService)
+  private showError(message: string) {
+    this.notifyService.showError(message)
   }
 
-  private async generateFiles(config: TConfig | TFile | TFolder, currentDir: Uri): Promise<void> {
+  private showSuccess(message: string | null) {
+    this.notifyService.showSuccessMessage(message)
+  }
+
+  private showCancel() {
+    this.notifyService.showCancelMessage()
+  }
+
+  private async generateFiles(config: TConfig | TFile | TFolder, currentDir: Uri): Promise<boolean> {
     if (isString(config)) {
-      await this.createFile(config, currentDir)
-      return
+      return this.createFile(config, currentDir)
     }
 
     if (isArray(config)) {
-      for await (const item of config) {
-        if (isString(item)) {
-          await this.createFile(item, currentDir)
-        } else {
-          await this.generateFiles(item, currentDir)
-        }
-      }
-      return
+      return this.generateFilesFromArray(config, currentDir)
     }
 
-    for (const key in config) {
+    return this.generateFilesFromObject(config, currentDir)
+  }
+
+  private async createFile(fileName: string, currentDir: Uri): Promise<boolean> {
+    return this.overwriteStrategyService.createFile(fileName, currentDir, this.notifyService)
+  }
+
+  private async createFolder(folderName: string, currentDir: Uri): Promise<boolean> {
+    return this.overwriteStrategyService.createFolder(folderName, currentDir, this.notifyService)
+  }
+
+  private async generateFilesFromArray(config: (TFile | TFolder)[], currentDir: Uri): Promise<boolean> {
+    let isCreated = false
+
+    for await (const item of config) {
+      isCreated = isString(item) //
+        ? await this.createFile(item, currentDir)
+        : await this.generateFiles(item, currentDir)
+
+      if (!isCreated) return false
+    }
+
+    return isCreated
+  }
+
+  private async generateFilesFromObject(config: Record<string, TFolder>, currentDir: Uri): Promise<boolean> {
+    let isCreated = false
+    const entries = Object.entries(config)
+
+    for await (const [key, value] of entries) {
+      isCreated = await this.createFolder(key, currentDir)
+
+      if (!isCreated) return false
+
       const folderPath = Uri.joinPath(currentDir, key)
-      const item = config[key]
 
-      await this.createFolder(key, currentDir)
-      await this.generateFiles(item, folderPath)
+      isCreated = await this.generateFiles(value, folderPath)
+
+      if (!isCreated) return false
     }
+
+    return isCreated
   }
 }

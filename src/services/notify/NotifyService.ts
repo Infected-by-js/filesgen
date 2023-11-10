@@ -7,8 +7,12 @@ export class NotifyService implements INotifyService {
     window.showErrorMessage(message)
   }
 
-  showSuccessMessage(presetName?: string): void {
+  showSuccessMessage(presetName: string | null = null): void {
     window.showInformationMessage(`Successfully generated files from ${presetName ?? CONFIG_KEY_PRESETS}`)
+  }
+
+  showCancelMessage(): void {
+    window.showInformationMessage('Files generation was canceled')
   }
 
   showEmptyConfigMessage(): void {
@@ -22,8 +26,8 @@ export class NotifyService implements INotifyService {
     return result === 'Yes'
   }
 
-  async selectPreset(presetsNames: string[]): Promise<string | undefined> {
-    if (!presetsNames.length) return
+  async selectPreset(presetsNames: string[]): Promise<string | null | undefined> {
+    if (!presetsNames.length) return null
 
     return window.showQuickPick(presetsNames, {placeHolder: 'Select a key from the config file'})
   }

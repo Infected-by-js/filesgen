@@ -14,9 +14,10 @@ export type TOverwriteStrategy = keyof typeof OVERWRITE_STRATEGIES
 
 export interface INotifyService {
   showError(message: string): void
-  showSuccessMessage(presetName?: string): void
+  showSuccessMessage(presetName: string | null): void
+  showCancelMessage(): void
   showEmptyConfigMessage(): void
-  selectPreset(keys: string[]): Promise<string | undefined>
+  selectPreset(keys: string[]): Promise<string | null | undefined>
   getDestination(): Promise<Uri | undefined>
   confirmAction(message: string): Promise<boolean>
 }
