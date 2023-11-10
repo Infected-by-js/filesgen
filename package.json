@@ -88,14 +88,27 @@
   "scripts": {
     "vscode:prepublish": "yarn run compile",
     "compile": "tsc -p ./",
-    "watch": "tsc -watch -p ./"
+    "watch": "tsc -watch -p ./",
+    "test:all": "yarn compile && vscode-test --recursive",
+    "test:units": "yarn compile && mocha  out/test/units"
   },
   "devDependencies": {
+    "@types/chai": "^4.3.10",
+    "@types/chalk": "^2.2.0",
+    "@types/mocha": "^10.0.4",
     "@types/node": "18.x",
+    "@types/sinon": "^17.0.1",
     "@types/vscode": "^1.84.0",
     "@typescript-eslint/eslint-plugin": "^6.9.0",
     "@typescript-eslint/parser": "^6.9.0",
+    "@vscode/test-cli": "^0.0.4",
+    "@vscode/test-electron": "^2.3.6",
+    "chai": "^4.3.10",
+    "chalk": "^4.1.2",
     "eslint": "^8.52.0",
+    "mocha": "^10.2.0",
+    "sinon": "^17.0.1",
     "typescript": "^5.2.2"
-  }
+  },
+  "dependencies": {}
 }

@@ -1,0 +1,5 @@
+{
+  "reporter": "src/test/custom-reporter.js",
+  "recursive": true,
+  "ui": "tdd"
+}

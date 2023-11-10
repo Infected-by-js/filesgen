@@ -5,7 +5,6 @@ export function isEmpty(value: unknown): boolean {
   if (isObject(value) && !Object.keys(value).length) return true
   if (isArray(value) && !value.length) return true
   if (isString(value) && !value.trim().length) return true
-  if (isNumber(value)) return true
 
   return false
 }

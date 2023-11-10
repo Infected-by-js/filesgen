@@ -16,6 +16,7 @@ export function activate(context: vscode.ExtensionContext) {
       notifier.showEmptyConfigMessage()
       return
     }
+
     const destination = await notifier.getDestination(resource)
 
     if (isNull(destination)) return
