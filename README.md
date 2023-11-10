@@ -88,3 +88,7 @@ There are no known issues at the moment. If you encounter any problems, please r
   - Added the ability to customize the destination directory.
 - Version 0.0.3
   - Added the overwrite strategy
+- Version 0.0.4
+  - Minor updates
+- Version 0.1.0
+  - Release MVP

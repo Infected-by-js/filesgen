@@ -2,7 +2,7 @@
   "name": "filesgen",
   "displayName": "FilesGen - Files Generator",
   "description": "VSCode extension to generate files from config file",
-  "version": "0.0.4",
+  "version": "0.1.0",
   "license": "MIT",
   "icon": "./icon.png",
   "repository": {

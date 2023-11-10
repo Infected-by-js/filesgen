@@ -1,6 +1,7 @@
 import {workspace, Uri} from 'vscode'
 import {isString, isArray} from '../../type-guards'
 import {IConfigService, INotifyService, IOverwriteStrategyService, TConfig, TFile, TFolder} from '../../types'
+import {isEmpty} from '../../helpers'
 
 export class FilesGenerationService {
   private configService: IConfigService
@@ -80,25 +81,24 @@ export class FilesGenerationService {
       if (!isCreated) return false
     }
 
-    return isCreated
+    return isEmpty(config) || isCreated
   }
 
   private async generateFilesFromObject(config: Record<string, TFolder>, currentDir: Uri): Promise<boolean> {
     let isCreated = false
-    const entries = Object.entries(config)
 
-    for await (const [key, value] of entries) {
+    for await (const [key, value] of Object.entries(config)) {
       isCreated = await this.createFolder(key, currentDir)
 
-      if (!isCreated) return false
+      if (isCreated) {
+        const folderPath = Uri.joinPath(currentDir, key)
 
-      const folderPath = Uri.joinPath(currentDir, key)
-
-      isCreated = await this.generateFiles(value, folderPath)
+        isCreated = await this.generateFiles(value, folderPath)
+      }
 
       if (!isCreated) return false
     }
 
-    return isCreated
+    return isEmpty(config) || isCreated
   }
 }
