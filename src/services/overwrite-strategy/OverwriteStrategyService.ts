@@ -6,7 +6,6 @@ import {ForceCreateStrategy} from './StrategyForceCreate'
 import {SkipCreateStrategy} from './StrategySkipCreate'
 
 export class OverwriteStrategyService {
-  private strategyName: TOverwriteStrategy
   private strategy: IOverwriteStrategyService
   private readonly StrategyMap: OverwriteStrategyMap = {
     [OVERWRITE_STRATEGIES.force]: () => new ForceCreateStrategy(),
@@ -15,8 +14,8 @@ export class OverwriteStrategyService {
   }
 
   constructor(overwriteStrategy?: TOverwriteStrategy) {
-    this.strategyName = overwriteStrategy ?? OVERWRITE_STRATEGIES.withConfirm
-    this.strategy = this.StrategyMap[this.strategyName]()
+    const strategyName = overwriteStrategy ?? OVERWRITE_STRATEGIES.withConfirm
+    this.strategy = this.StrategyMap[strategyName]()
   }
 
   createFile(fileName: string, currentDir: Uri, notifier: INotifyService): Promise<boolean> {
