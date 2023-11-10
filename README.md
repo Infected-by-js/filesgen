@@ -68,13 +68,20 @@ It simplifies the process of creating project structures and boilerplate files b
 3. **Generate Files**:
 
 - To generate files using the mouse:
+
   - Right-click on a specific folder or directory within the project explorer.
   - Choose `"Generate Files from JSON"` from the context menu.
+
+![example_right_click](https://github.com/Infected-by-js/filesgen/blob/readme/filesgen_right_click.gif?raw=true)
+
 - Alternatively, you can generate files using the command palette:
   - Press `Ctrl+Shift+P` (`Cmd+Shift+P` on MacOs) to open the command palette.
   - Search for `"Generate Files"` and select `"FilesGen: Generate Files from JSON"` from the command list.
   - Follow the prompts to specify the destination directory and select a configuration preset.
-  - Files and folders will be generated based on the selected configuration.
+
+![example_prompt](https://github.com/Infected-by-js/filesgen/blob/readme/filesgen_prompt.gif?raw=true)
+
+Files and folders will be generated based on the selected configuration.
 
 ## Known Issues
 
@@ -92,3 +99,5 @@ There are no known issues at the moment. If you encounter any problems, please r
   - Minor updates
 - Version 0.1.0
   - Release MVP
+- Version 0.1.1
+  - Update readme description
