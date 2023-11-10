@@ -7,7 +7,7 @@ It simplifies the process of creating project structures and boilerplate files b
 
 ## Features
 
-- Create files and folders based on a configuration file.
+- Create files and folders based on a configuration with two mouse clicks.
 - Define project structures using a simple JSON-based configuration.
 - Customize the destination directory for file generation.
 - Select configuration preset from the file to generate specific structures.
@@ -21,16 +21,15 @@ It simplifies the process of creating project structures and boilerplate files b
 
 2. **Configuration**:
 
-- Inside `settings.json` add `filesgen.config` key
+- Inside `settings.json` add `filesgen.presets`
 - As value you can use object, or array to define file and folder structure
-
-You can define structure in one of the following ways:
+- You can define structure in one of the following ways:
 
 **JSON Array Format**:
 
 ```json
 {
-  "filesgen.config": ["a.ts", "b.ts", "c.ts"]
+  "filesgen.presets": ["ui.tsx", "utils.ts", "api.ts"]
 }
 ```
 
@@ -38,26 +37,25 @@ You can define structure in one of the following ways:
 
 ```json
 {
-  "filesgen.config": {
+  "filesgen.presets": {
     "my_preset_name_1": [
-      "1.ts",
+      "api.ts",
       {
-        "a": ["2.ts", "3.ts"]
+        "ui": ["header.tsx", "content.tsx", "index.ts"]
       },
-      "4.ts"
+      "utils.ts"
     ],
     "my_preset_name_2": {
-      "b": [],
-      "c": "5.ts",
-      "d": ["6.ts"],
-      "e": [
-        "7.ts",
+      "helpers": [],
+      "api": ["index.ts"],
+      "ui": [
+        "index.ts",
         {
-          "f": ["8.ts", "9.ts"]
+          "header": ["header-left.tsx", "header-right.tsx"]
         },
-        "10.ts",
+        "sidebar.tsx",
         {
-          "g": ["11.ts", "12.ts"]
+          "content": ["banner.tsx", "form.tsx"]
         }
       ]
     }
@@ -78,10 +76,6 @@ You can define structure in one of the following ways:
   - Follow the prompts to specify the destination directory and select a configuration preset.
   - Files and folders will be generated based on the selected configuration.
 
-## Extension Settings
-
-<!-- This extension does not have any specific settings. It uses the default VS Code settings. -->
-
 ## Known Issues
 
 There are no known issues at the moment. If you encounter any problems, please report them on the [FilesGen](https://github.com/infected-by-js/filesgen).
@@ -92,3 +86,5 @@ There are no known issues at the moment. If you encounter any problems, please r
   - Initial release of the FilesGen extension.
 - Version 0.0.2
   - Added the ability to customize the destination directory.
+- Version 0.0.3
+  - Added the overwrite strategy
