@@ -4,50 +4,31 @@ import {IConfigService, INotifyService, IOverwriteStrategyService, TConfig, TFil
 import {isEmpty} from '../../helpers'
 
 export class FilesGenerationService {
-  private configService: IConfigService
   private notifyService: INotifyService
   private overwriteStrategyService: IOverwriteStrategyService
 
-  constructor(
-    notifyService: INotifyService,
-    configService: IConfigService,
-    overwriteStrategyService: IOverwriteStrategyService
-  ) {
+  constructor(notifyService: INotifyService, overwriteStrategyService: IOverwriteStrategyService) {
     this.notifyService = notifyService
-    this.configService = configService
     this.overwriteStrategyService = overwriteStrategyService
   }
 
-  async generate(rootPath = workspace.workspaceFolders?.[0].uri, presetName: string | null = null): Promise<void> {
-    if (!rootPath) {
-      this.showError(`The root path does not exist`)
-      return
-    }
+  async generate(rootPath = workspace.workspaceFolders?.[0].uri, config: TConfig | TFolder): Promise<boolean> {
+    if (!rootPath) throw Error('The root path does not exist')
 
     try {
-      const config = await this.getConfig(presetName)
       const isSuccess = await this.generateFiles(config, rootPath)
 
-      isSuccess ? this.showSuccess(presetName) : this.showCancel()
+      return isSuccess
     } catch (error) {
-      this.showError(error as string)
+      throw Error(error as string)
     }
   }
-
-  private getConfig(presetName: string | null) {
-    return this.configService.getPresetConfig(presetName)
+  private async createFile(fileName: string, currentDir: Uri): Promise<boolean> {
+    return this.overwriteStrategyService.createFile(fileName, currentDir, this.notifyService)
   }
 
-  private showError(message: string) {
-    this.notifyService.showError(message)
-  }
-
-  private showSuccess(message: string | null) {
-    this.notifyService.showSuccessMessage(message)
-  }
-
-  private showCancel() {
-    this.notifyService.showCancelMessage()
+  private async createFolder(folderName: string, currentDir: Uri): Promise<boolean> {
+    return this.overwriteStrategyService.createFolder(folderName, currentDir, this.notifyService)
   }
 
   private async generateFiles(config: TConfig | TFile | TFolder, currentDir: Uri): Promise<boolean> {
@@ -60,14 +41,6 @@ export class FilesGenerationService {
     }
 
     return this.generateFilesFromObject(config, currentDir)
-  }
-
-  private async createFile(fileName: string, currentDir: Uri): Promise<boolean> {
-    return this.overwriteStrategyService.createFile(fileName, currentDir, this.notifyService)
-  }
-
-  private async createFolder(folderName: string, currentDir: Uri): Promise<boolean> {
-    return this.overwriteStrategyService.createFolder(folderName, currentDir, this.notifyService)
   }
 
   private async generateFilesFromArray(config: (TFile | TFolder)[], currentDir: Uri): Promise<boolean> {

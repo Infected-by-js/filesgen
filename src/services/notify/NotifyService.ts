@@ -26,10 +26,9 @@ export class NotifyService implements INotifyService {
     return result === 'Yes'
   }
 
-  async selectPreset(presetsNames: string[]): Promise<string | null | undefined> {
-    if (!presetsNames.length) return null
-
-    return window.showQuickPick(presetsNames, {placeHolder: 'Select a key from the config file'})
+  async selectPreset(presetsNames: string[]): Promise<string | null> {
+    const preset = await window.showQuickPick(presetsNames, {placeHolder: 'Select a key from the config file'})
+    return preset ?? null
   }
 
   async getDestination(resource?: Uri): Promise<Uri | undefined> {
