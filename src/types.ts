@@ -25,6 +25,12 @@ export interface IOverwriteStrategyService {
   createFile(fileName: string, currentDir: Uri, notifier: INotifyService): Promise<void>
   createFolder(folderName: string, currentDir: Uri, notifier: INotifyService): Promise<void>
 }
+export interface OverwriteStrategyMap {
+  [OVERWRITE_STRATEGIES.force]: () => IOverwriteStrategyService
+  [OVERWRITE_STRATEGIES.withConfirm]: () => IOverwriteStrategyService
+  [OVERWRITE_STRATEGIES.none]: () => IOverwriteStrategyService
+}
+
 export interface IConfigService {
   getPresets(): TConfig | undefined
   getPresetConfig(presetName: string | null): Promise<TConfig | TFile | TFolder | never>

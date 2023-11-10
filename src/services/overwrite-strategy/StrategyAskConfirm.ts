@@ -2,6 +2,11 @@ import {Uri, workspace} from 'vscode'
 import {IOverwriteStrategyService, INotifyService} from '../../types'
 
 export class AskForConfirmationStrategy implements IOverwriteStrategyService {
+  private parentFolderConfirmed: Set<string> = new Set()
+  private existMessage(type: 'File' | 'Folder', path: string) {
+    return `${type}: \n${path} already exists.\nDo you want to overwrite?`
+  }
+
   async createFile(fileName: string, currentDir: Uri, notifier: INotifyService): Promise<void> {
     const fileContent = ''
     const fileUri = Uri.joinPath(currentDir, fileName)
@@ -11,8 +16,11 @@ export class AskForConfirmationStrategy implements IOverwriteStrategyService {
       await workspace.fs.writeFile(fileUri, Buffer.from(fileContent))
       return
     }
-    const relativePath = currentDir.path + '/' + fileName
-    const confirm = await notifier.confirmAction(`File ${relativePath} already exists.\nDo you want to overwrite?`)
+
+    const filePath = currentDir.path + '/' + fileName
+    const isForceRewrite = this.parentFolderConfirmed.has(currentDir.path)
+
+    const confirm = isForceRewrite || (await notifier.confirmAction(this.existMessage('File', filePath)))
 
     if (confirm) {
       await workspace.fs.writeFile(fileUri, Buffer.from(fileContent))
@@ -28,10 +36,12 @@ export class AskForConfirmationStrategy implements IOverwriteStrategyService {
       return
     }
 
-    const relativePath = currentDir.path + '/' + folderName
-    const confirm = await notifier.confirmAction(`Folder ${relativePath} already exists.\nDo you want to overwrite it?`)
+    const folderPath = currentDir.path + '/' + folderName
+
+    const confirm = await notifier.confirmAction(this.existMessage('Folder', folderPath))
 
     if (confirm) {
+      this.parentFolderConfirmed.add(folderPath)
       await workspace.fs.createDirectory(folderUri)
     }
   }

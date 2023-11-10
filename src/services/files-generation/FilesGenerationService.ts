@@ -46,7 +46,7 @@ export class FilesGenerationService {
     }
 
     if (isArray(config)) {
-      for (const item of config) {
+      for await (const item of config) {
         if (isString(item)) {
           await this.createFile(item, currentDir)
         } else {
