@@ -22,8 +22,8 @@ export interface INotifyService {
 }
 
 export interface IOverwriteStrategyService {
-  createFile(fileName: string, currentDir: Uri, notifier: INotifyService): Promise<void>
-  createFolder(folderName: string, currentDir: Uri, notifier: INotifyService): Promise<void>
+  createFile(fileName: string, currentDir: Uri, notifier: INotifyService): Promise<boolean>
+  createFolder(folderName: string, currentDir: Uri, notifier: INotifyService): Promise<boolean>
 }
 export interface OverwriteStrategyMap {
   [OVERWRITE_STRATEGIES.force]: () => IOverwriteStrategyService

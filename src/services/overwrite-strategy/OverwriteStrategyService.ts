@@ -19,11 +19,11 @@ export class OverwriteStrategyService {
     this.strategy = this.StrategyMap[this.strategyName]()
   }
 
-  createFile(fileName: string, currentDir: Uri, notifier: INotifyService): Promise<void> {
+  createFile(fileName: string, currentDir: Uri, notifier: INotifyService): Promise<boolean> {
     return this.strategy.createFile(fileName, currentDir, notifier)
   }
 
-  createFolder(folderName: string, currentDir: Uri, notifier: INotifyService): Promise<void> {
+  createFolder(folderName: string, currentDir: Uri, notifier: INotifyService): Promise<boolean> {
     return this.strategy.createFolder(folderName, currentDir, notifier)
   }
 }
