@@ -1,1 +1,1 @@
-export {OverwriteStrategyService as default} from './OverwriteStrategyService'
+export {OverwriteStrategyService} from './OverwiteStrategyService'

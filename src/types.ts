@@ -33,8 +33,8 @@ export interface OverwriteStrategyMap {
 }
 
 export interface IConfigService {
-  getPresets(): TConfig | undefined
-  getPresetConfig(presetName: string | null): Promise<TConfig | TFile | TFolder | never>
-  getOverwriteStrategy(): TOverwriteStrategy | undefined
+  getConfig(): TConfig | undefined
+  getPreset(presetName: string | null): Promise<TConfig | TFile | TFolder | never>
+  useConfig(initialConfig: TConfig): void
   isConfigEmpty(): boolean
 }

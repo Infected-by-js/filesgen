@@ -1,6 +1,6 @@
 import {Uri, window, workspace} from 'vscode'
-import {CONFIG_KEY_PRESETS, EXTENSTION_NAME} from '../../constants'
-import {INotifyService} from '../../types'
+import {CONFIG_KEY_PRESETS, EXTENSTION_NAME} from '../constants'
+import {INotifyService} from '../types'
 
 export class NotifyService implements INotifyService {
   showError(message: string) {
@@ -8,7 +8,7 @@ export class NotifyService implements INotifyService {
   }
 
   showSuccessMessage(presetName: string | null = null): void {
-    window.showInformationMessage(`Successfully generated files from ${presetName ?? CONFIG_KEY_PRESETS}`)
+    window.showInformationMessage(`Successfully generated files from ${presetName ?? 'config'}`)
   }
 
   showCancelMessage(): void {

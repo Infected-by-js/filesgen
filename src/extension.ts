@@ -1,20 +1,14 @@
 import * as vscode from 'vscode'
-import ConfigService from './services/config'
-import OverwriteStrategyService from './services/overwrite-strategy'
-import NotifyService from './services/notify'
-import FilesGenerationService from './services/files-generation'
-import {isNull} from './type-guards'
+import {FilesGeneratorController} from './controllers'
 
 
 export function activate(context: vscode.ExtensionContext) {
+  // Generate with settings.json
   let disposable = vscode.commands.registerCommand('filesgen.generateFiles', async (resource: vscode.Uri) => {
-    const notifyService = new NotifyService()
-    const configService = new ConfigService()
-    const overwriteService = new OverwriteStrategyService(configService.getOverwriteStrategy())
-    const generator = new FilesGenerationService(notifyService, overwriteService)
+    const filesGeneratorController = new FilesGeneratorController()
+    filesGeneratorController.generateFiles(resource)
+  })
 
-    if (configService.isConfigEmpty()) {
-      notifyService.showEmptyConfigMessage()
       return
     }
 
