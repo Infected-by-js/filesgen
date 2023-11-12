@@ -1,13 +1,13 @@
-import {Uri, window, workspace} from 'vscode'
-import {CONFIG_KEY_PRESETS, EXTENSTION_NAME} from '../constants'
-import {INotifyService} from '../types'
+import {window, Uri, workspace} from 'vscode'
+import {EXTENSTION_NAME, CONFIG_KEY_PRESETS} from '../../constants'
+import {INotifyService} from '../../types'
 
 export class NotifyService implements INotifyService {
   showError(message: string) {
     window.showErrorMessage(message)
   }
 
-  showSuccessMessage(presetName: string | null = null): void {
+  showSuccessMessage(presetName?: string | undefined | null): void {
     window.showInformationMessage(`Successfully generated files from ${presetName ?? 'config'}`)
   }
 

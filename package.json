@@ -21,26 +21,29 @@
   "contributes": {
     "commands": [
       {
-        "command": "filesgen.generateFiles",
-        "title": "Generate files from JSON",
+        "command": "filesgen.generateFilesFromJson",
+        "title": "Generate Files from JSON",
         "category": "FilesGen",
-        "group": "FilesGen",
-        "icon": {
-          "light": "./icon.svg",
-          "dark": "./icon.svg"
-        }
+        "group": "FilesGen"
+      },
+      {
+        "command": "filesgen.generateFilesFromEditor",
+        "title": "Generate Files from editor input",
+        "category": "FilesGen",
+        "group": "FilesGen"
       }
     ],
     "menus": {
       "explorer/context": [
         {
           "when": "explorerResourceIsFolder",
-          "command": "filesgen.generateFiles",
-          "group": "FilesGen",
-          "icon": {
-            "light": "./src/icon.svg",
-            "dark": "./src/icon.svg"
-          }
+          "command": "filesgen.generateFilesFromJson",
+          "group": "FilesGen"
+        },
+        {
+          "when": "explorerResourceIsFolder",
+          "command": "filesgen.generateFilesFromEditor",
+          "group": "FilesGen"
         }
       ]
     },

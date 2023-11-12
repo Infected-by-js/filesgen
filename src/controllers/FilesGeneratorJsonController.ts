@@ -1,10 +1,10 @@
 import {Uri} from 'vscode'
 import {isEmpty} from '../helpers'
 import {isNull} from '../type-guards'
-import {TConfig} from '../types'
+import {IFilesGenerationController, TConfig} from '../types'
 import {NotifyService, ConfigService, OverwriteStrategyService, FilesGenerationService} from '../services'
 
-export class FilesGeneratorController {
+export class FilesGeneratorJsonController implements IFilesGenerationController {
   private notifyService: NotifyService
   private configService: ConfigService
   private overwriteService: OverwriteStrategyService

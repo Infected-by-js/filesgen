@@ -9,3 +9,5 @@ export function isEmpty(value: unknown): boolean {
 
   return false
 }
+
+export const debugLog = (...msg: any) => console.log('\n[DEBUG_LOG]: ' + JSON.stringify(msg, null, 2))

@@ -1,1 +1,2 @@
-export {FilesGeneratorController} from './FilesGeneratorController'
+export {FilesGeneratorJsonController} from './FilesGeneratorJsonController'
+export {FilesGenerationEditorController} from './FilesGeneratorEditorController'

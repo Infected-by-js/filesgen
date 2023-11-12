@@ -1,13 +1,19 @@
 import {workspace, ConfigurationTarget} from 'vscode'
-import {EXTENSTION_NAME, CONFIG_KEY_PRESETS} from '../constants'
-import {isEmpty} from '../helpers'
-import {isString, isObject} from '../type-guards'
-import {IConfigService, TConfig, TFile, TFolder} from '../types'
+import {EXTENSTION_NAME, CONFIG_KEY_PRESETS} from '../../constants'
+import {isEmpty} from '../../helpers'
+import {isString, isObject} from '../../type-guards'
+import {IConfigService, TConfig, TFile, TFolder} from '../../types'
+import {Validator} from './Validator'
 
 export class ConfigService implements IConfigService {
+  private validator: Validator
   private extName = EXTENSTION_NAME
   private presets = CONFIG_KEY_PRESETS
   private initialConfig?: TConfig
+
+  constructor() {
+    this.validator = new Validator()
+  }
 
   useConfig(initialConfig: TConfig): void {
     this.initialConfig = initialConfig
@@ -22,6 +28,14 @@ export class ConfigService implements IConfigService {
 
   isConfigEmpty(): boolean {
     return isEmpty(this.getConfig())
+  }
+
+  configFromString(configString: string): TConfig | null {
+    try {
+      return this.validator.configFromString(configString)
+    } catch (error) {
+      return null
+    }
   }
 
   async getPreset(presetName: string | null): Promise<TConfig | TFile | TFolder | never> {

@@ -1,39 +1,27 @@
 import * as vscode from 'vscode'
-import {FilesGeneratorController} from './controllers'
-
+import {COMMANDS} from './constants'
+import {FilesGeneratorJsonController, FilesGenerationEditorController} from './controllers'
 
 export function activate(context: vscode.ExtensionContext) {
-  // Generate with settings.json
-  let disposable = vscode.commands.registerCommand('filesgen.generateFiles', async (resource: vscode.Uri) => {
-    const filesGeneratorController = new FilesGeneratorController()
-    filesGeneratorController.generateFiles(resource)
+  let json = vscode.commands.registerCommand(COMMANDS.generateFromSettingsJson, async (resource: vscode.Uri) => {
+    const generator = new FilesGeneratorJsonController()
+    generator.generateFiles(resource)
   })
 
+  let editor = vscode.commands.registerCommand(COMMANDS.generateFromEditor, async (resource: vscode.Uri) => {
+    const projectRoot = vscode.workspace.workspaceFolders?.[0].uri
+
+    if (!projectRoot) {
+      vscode.window.showErrorMessage('Please open a folder/workspace before using this command.')
       return
     }
 
-    const destination = await notifyService.getDestination(resource)
+    const generator = new FilesGenerationEditorController(projectRoot)
 
-    if (isNull(destination)) return
-
-    const presets = configService.getPresetsNames()
-    const selectedPreset = await notifyService.selectPreset(presets)
-    const isNoExistedPresetsSelected = presets?.length && isNull(selectedPreset)
-
-    if (isNoExistedPresetsSelected) return
-
-    try {
-      const config = await configService.getPresetConfig(selectedPreset)
-      const isSuccess = await generator.generate(destination, config)
-
-      isSuccess //
-        ? notifyService.showSuccessMessage(selectedPreset)
-        : notifyService.showCancelMessage()
-    } catch (error) {
-      notifyService.showError(error as string)
-    }
+    generator.generateFiles(resource)
   })
 
-  context.subscriptions.push(disposable)
+  context.subscriptions.push(json, editor)
+
   vscode.commands.executeCommand('setContext', 'filesgen.contextMenuIsVisible', true)
 }

@@ -1,7 +1,7 @@
 import {workspace, Uri} from 'vscode'
-import {isString, isArray} from '../type-guards'
-import {INotifyService, IOverwriteStrategyService, TConfig, TFile, TFolder} from '../types'
-import {isEmpty} from '../helpers'
+import {isEmpty} from '../../helpers'
+import {isString, isArray} from '../../type-guards'
+import {INotifyService, IOverwriteStrategyService, TConfig, TFolder, TFile} from '../../types'
 
 export class FilesGenerationService {
   private notifyService: INotifyService
