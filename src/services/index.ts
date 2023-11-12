@@ -1,5 +1,4 @@
 export {ConfigService} from './config'
-export {TempEditorService} from './temp-editor'
 export {NotifyService} from './notify'
 export {OverwriteStrategyService} from './overwrite-strategy'
 export {FilesGenerationService} from './file-generation'

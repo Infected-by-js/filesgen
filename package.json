@@ -25,12 +25,6 @@
         "title": "Generate Files from JSON",
         "category": "FilesGen",
         "group": "FilesGen"
-      },
-      {
-        "command": "filesgen.generateFilesFromEditor",
-        "title": "Generate Files from editor input",
-        "category": "FilesGen",
-        "group": "FilesGen"
       }
     ],
     "menus": {
@@ -38,11 +32,6 @@
         {
           "when": "explorerResourceIsFolder",
           "command": "filesgen.generateFilesFromJson",
-          "group": "FilesGen"
-        },
-        {
-          "when": "explorerResourceIsFolder",
-          "command": "filesgen.generateFilesFromEditor",
           "group": "FilesGen"
         }
       ]

@@ -42,19 +42,8 @@ export interface IConfigService {
   isConfigEmpty(): boolean
 }
 
-export interface ITempEditorService {
-  openTempEditor(projectRoot: Uri): Promise<string | null>
-  closeTempEditor(document: TextDocument): Promise<void>
-}
-
 export interface IValidator {
   configFromString(config: string): TConfig | null
-}
-
-export interface IEditorController {
-  openTempEditor(): Promise<string | null>
-  closeTempEditor(): Promise<void>
-  processConfig(savedConfig: string | null): Promise<TProcessConfigResult>
 }
 
 export interface IFilesGenerationController {
