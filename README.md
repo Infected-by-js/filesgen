@@ -101,3 +101,5 @@ There are no known issues at the moment. If you encounter any problems, please r
   - Release MVP
 - Version 0.1.1
   - Update readme description
+- Version 0.1.2
+  - Minor updates
